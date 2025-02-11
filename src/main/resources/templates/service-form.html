@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Service to Booking</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        form { margin: auto; width: 300px; padding: 20px; border: 1px solid #ddd; border-radius: 10px; }
+        label, input { display: block; width: 100%; margin: 10px 0; padding: 8px; }
+        button { background-color: #007bff; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<h1>Add Extra Service to Booking</h1>
+<form action="/additional-services/add" method="post">
+    <label for="bookingId">Booking ID:</label>
+    <input type="number" id="bookingId" name="bookingId" required>
+
+    <label for="serviceId">Service ID:</label>
+    <input type="number" id="serviceId" name="serviceId" required>
+
+    <button type="submit">Add Service</button>
+</form>
+
+<a href="/additional-services">Back to Services</a>
+
+</body>
+</html>

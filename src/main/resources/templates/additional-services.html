@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Additional Services</title>
+</head>
+<body>
+<h1>Available Additional Services</h1>
+<table border="1">
+    <tr><th>ID</th><th>Name</th><th>Price</th></tr>
+    <tr th:each="service : ${services}">
+        <td th:text="${service.id}"></td>
+        <td th:text="${service.name}"></td>
+        <td th:text="${service.price}"></td>
+    </tr>
+</table>
+
+<h2>Add Service to Booking</h2>
+<form action="/additional-services/add" method="post">
+    <input type="number" name="bookingId" placeholder="Booking ID" required>
+    <input type="number" name="serviceId" placeholder="Service ID" required>
+    <button type="submit">Add Service</button>
+</form>
+</body>
+</html>

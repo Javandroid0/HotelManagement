@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rooms</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        table { margin: auto; border-collapse: collapse; width: 80%; }
+        th, td { border: 1px solid black; padding: 10px; text-align: center; }
+        th { background-color: #007bff; color: white; }
+        button { background-color: red; color: white; padding: 5px; border: none; border-radius: 5px; cursor: pointer; }
+        a { text-decoration: none; color: white; background-color: green; padding: 5px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+<h1>Room List</h1>
+<a href="/rooms/new">Add New Room</a>
+<table>
+    <tr>
+        <th>ID</th><th>Type</th><th>Price</th><th>Status</th><th>Action</th>
+    </tr>
+    <tr th:each="room : ${rooms}">
+        <td th:text="${room.id}"></td>
+        <td th:text="${room.type}"></td>
+        <td th:text="${room.price}"></td>
+        <td th:text="${room.status}"></td>
+        <td>
+            <form th:action="@{/rooms/{id}/status(id=${room.id})}" method="post">
+                <select name="status">
+                    <option value="Available">Available</option>
+                    <option value="Booked">Booked</option>
+                </select>
+                <button type="submit">Update</button>
+            </form>
+            <a th:href="@{/rooms/delete/{id}(id=${room.id})}">Delete</a>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

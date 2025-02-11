@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customers</title>
+</head>
+<body>
+<h1>Customers List</h1>
+<table border="1">
+    <tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th></tr>
+    <tr th:each="customer : ${customers}">
+        <td th:text="${customer.id}"></td>
+        <td th:text="${customer.name}"></td>
+        <td th:text="${customer.email}"></td>
+        <td th:text="${customer.phone}"></td>
+    </tr>
+</table>
+
+<h2>Add Customer</h2>
+<form action="/customers" method="post">
+    <input type="text" name="name" placeholder="Name" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="text" name="phone" placeholder="Phone" required>
+    <button type="submit">Add</button>
+</form>
+</body>
+</html>
