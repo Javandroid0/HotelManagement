@@ -5,28 +5,33 @@
     <style>
         body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
         form { margin: auto; width: 300px; padding: 20px; border: 1px solid #ddd; border-radius: 10px; }
-        label, input, select { display: block; width: 100%; margin: 10px 0; padding: 8px; }
+        label, select, input, button { display: block; width: 100%; margin: 10px 0; padding: 8px; }
         button { background-color: #007bff; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<h1>Process Payment</h1>
+<h1>Make a Payment</h1>
+
 <form action="/payments/process" method="post">
-    <label for="bookingId">Booking ID:</label>
-    <input type="number" id="bookingId" name="bookingId" required>
+    <label for="bookingId">Select Booking:</label>
+    <select id="bookingId" name="bookingId" required>
+        <option th:each="booking : ${bookings}"
+                th:value="${booking.id}"
+                th:text="'Booking #' + ${booking.id} + ' - Room ' + ${booking.roomId}"></option>
+    </select>
 
     <label for="paymentMethod">Payment Method:</label>
-    <select id="paymentMethod" name="paymentMethod">
+    <select id="paymentMethod" name="paymentMethod" required>
         <option value="Credit Card">Credit Card</option>
         <option value="Cash">Cash</option>
         <option value="Bank Transfer">Bank Transfer</option>
     </select>
 
-    <button type="submit">Process Payment</button>
+    <button type="submit">Pay Now</button>
 </form>
 
-<a href="/payments">Back to Payments</a>
-
+<p><a href="/payments">Back to Payments</a></p>
+<p><a href="/customer/home">Back to Dashboard</a></p>
 </body>
 </html>

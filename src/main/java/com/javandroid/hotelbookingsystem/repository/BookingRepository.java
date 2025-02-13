@@ -1,8 +1,5 @@
 package com.javandroid.hotelbookingsystem.repository;
 
-
-
-//import com.hotelmanagement.model.Booking;
 import com.javandroid.hotelbookingsystem.model.Booking;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class BookingRepository {
@@ -20,44 +18,32 @@ public class BookingRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // ✅ Retrieve all bookings
-    public List<Booking> getAllBookings() {
-        String sql = "SELECT * FROM bookings";
-        return jdbcTemplate.query(sql, new BookingRowMapper());
+    // ✅ Retrieve all bookings for a customer
+    public List<Booking> getBookingsByCustomerId(int customerId) {
+        String sql = "SELECT * FROM bookings WHERE customer_id = ?";
+        return jdbcTemplate.query(sql, new BookingRowMapper(), customerId);
     }
 
-    // ✅ Find a booking by ID
-    public Booking getBookingById(int id) {
+    // ✅ Retrieve a booking by ID (Fix `orElseThrow()` issue)
+    public Optional<Booking> getBookingById(int id) {
         String sql = "SELECT * FROM bookings WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new BookingRowMapper(), id);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new BookingRowMapper(), id));
+        } catch (Exception e) {
+            return Optional.empty(); // Return empty if booking not found
+        }
     }
 
     // ✅ Save a new booking
-    public int saveBooking(Booking booking) {
-        String sql = "INSERT INTO bookings (customer_id, room_id, booking_date, check_in_date, check_out_date) " +
-                "VALUES (?, ?, ?, ?, ?)";
-        return jdbcTemplate.update(sql, booking.getCustomerId(), booking.getRoomId(),
-                booking.getBookingDate(), booking.getCheckInDate(), booking.getCheckOutDate());
+    public void saveBooking(Booking booking) {
+        String sql = "INSERT INTO bookings (customer_id, room_id, check_in_date, check_out_date) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, booking.getCustomerId(), booking.getRoomId(), booking.getCheckInDate(), booking.getCheckOutDate());
     }
 
     // ✅ Delete a booking
-    public int deleteBooking(int id) {
+    public void deleteBooking(int id) {
         String sql = "DELETE FROM bookings WHERE id = ?";
-        return jdbcTemplate.update(sql, id);
-    }
-
-    public void updateBookingDates(int id, java.sql.Date checkIn, java.sql.Date checkOut) {
-        String sql = "UPDATE bookings SET check_in_date = ?, check_out_date = ? WHERE id = ?";
-        jdbcTemplate.update(sql, checkIn, checkOut, id);
-    }
-
-
-    // ✅ Check if a room is already booked
-    public boolean isRoomBooked(int roomId, java.util.Date checkIn, java.util.Date checkOut) {
-        String sql = "SELECT COUNT(*) FROM bookings WHERE room_id = ? AND " +
-                "(check_in_date < ? AND check_out_date > ?)";
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, roomId, checkOut, checkIn);
-        return count != null && count > 0;
+        jdbcTemplate.update(sql, id);
     }
 
     // ✅ Row Mapper for Booking object

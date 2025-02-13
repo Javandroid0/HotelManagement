@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer Dashboard</title>
+</head>
+<body>
+<h1>Welcome, <span th:text="${customer.name}"></span>!</h1>
+<p>Email: <span th:text="${customer.email}"></span></p>
+<p>Phone: <span th:text="${customer.phone}"></span></p>
+
+<nav>
+    <a href="/bookings/new">Book a Room</a> |
+    <a href="/payments">Make Payment</a> |
+    <a href="/additional-services">Request Extra Services</a> |
+    <a href="/customer/profile">My Profile</a> |
+    <a href="/customer/logout">Logout</a>
+</nav>
+
+<p><a href="/customer/home">Back to Dashboard</a></p>
+</body>
+</html>

@@ -13,7 +13,7 @@
 <body>
 
 <h1>Payments</h1>
-<a href="/payments/process">Process New Payment</a>
+<a href="/payments/pay">Process New Payment</a>
 <table>
     <tr>
         <th>ID</th><th>Booking ID</th><th>Amount</th><th>Payment Date</th><th>Method</th><th>Action</th>
@@ -27,6 +27,6 @@
         <td><a th:href="@{/payments/delete/{id}(id=${payment.id})}">Delete</a></td>
     </tr>
 </table>
-
+<p><a href="/customer/home">Back to Dashboard</a></p>
 </body>
 </html>

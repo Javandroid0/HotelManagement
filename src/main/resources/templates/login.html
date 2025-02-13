@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+<h1>Customer Login</h1>
+<form action="/auth/login" method="post">
+    <label>Email:</label>
+    <input type="email" name="email" required>
+
+    <label>Phone:</label>
+    <input type="text" name="phone" required>
+
+    <button type="submit">Login</button>
+</form>
+
+<p>Don't have an account? <a href="/auth/register">Register</a></p>
+
+<p th:if="${param.error}" style="color: red;">Invalid credentials. Please try again.</p>
+<p><a href="/customer/home">Back to Dashboard</a></p>
+</body>
+</html>

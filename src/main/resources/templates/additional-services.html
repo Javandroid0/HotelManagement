@@ -1,24 +1,31 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Additional Services</title>
-</head>
-<body>
-<h1>Available Additional Services</h1>
+<h2>Available Services</h2>
 <table border="1">
-    <tr><th>ID</th><th>Name</th><th>Price</th></tr>
+    <tr>
+        <th>Service Name</th>
+        <th>Price</th>
+        <th>Action</th>
+    </tr>
     <tr th:each="service : ${services}">
-        <td th:text="${service.id}"></td>
         <td th:text="${service.name}"></td>
         <td th:text="${service.price}"></td>
+        <td>
+            <form action="/additional-services/request" method="post">
+                <input type="hidden" name="serviceId" th:value="${service.id}">
+
+                <!-- ✅ Fix: Check if bookings exist before rendering the dropdown -->
+                <label th:if="${#lists.size(bookings) > 0}" th:for="'bookingId_' + ${service.id}">Select Booking:</label>
+
+                <select th:if="${#lists.size(bookings) > 0}" th:id="'bookingId_' + ${service.id}" name="bookingId" required>
+                    <option th:each="booking : ${bookings}"
+                            th:value="${booking.id}"
+                            th:text="'Booking #' + ${booking.id} + ' - Room ' + ${booking.roomId}"></option>
+                </select>
+
+                <!-- ✅ Show message if no bookings exist -->
+                <p th:if="${#lists.size(bookings) == 0}" style="color: red;">No active bookings available.</p>
+
+                <button type="submit" th:if="${#lists.size(bookings) > 0}">Request Service</button>
+            </form>
+        </td>
     </tr>
 </table>
-
-<h2>Add Service to Booking</h2>
-<form action="/additional-services/add" method="post">
-    <input type="number" name="bookingId" placeholder="Booking ID" required>
-    <input type="number" name="serviceId" placeholder="Service ID" required>
-    <button type="submit">Add Service</button>
-</form>
-</body>
-</html>

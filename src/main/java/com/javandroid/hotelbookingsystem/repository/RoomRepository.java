@@ -1,7 +1,5 @@
 package com.javandroid.hotelbookingsystem.repository;
 
-
-//import com.hotelmanagement.model.Room;
 import com.javandroid.hotelbookingsystem.model.Room;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -44,35 +42,11 @@ public class RoomRepository {
         jdbcTemplate.update(sql, status, roomId);
     }
 
-//    // ✅ Retrieve all rooms
-//    public List<Room> getAllRooms() {
-//        String sql = "SELECT * FROM rooms";
-//        return jdbcTemplate.query(sql, new RoomRowMapper());
-//    }
-
-//    // ✅ Find a room by ID
-//    public Room getRoomById(int id) {
-//        String sql = "SELECT * FROM rooms WHERE id = ?";
-//        return jdbcTemplate.queryForObject(sql, new RoomRowMapper(), id);
-//    }
-
-//    // ✅ Find all available rooms
-//    public List<Room> findAvailableRooms() {
-//        String sql = "SELECT * FROM rooms WHERE status = 'Available'";
-//        return jdbcTemplate.query(sql, new RoomRowMapper());
-//    }
-
     // ✅ Save a new room
     public int saveRoom(Room room) {
         String sql = "INSERT INTO rooms (type, price, status) VALUES (?, ?, ?)";
         return jdbcTemplate.update(sql, room.getType(), room.getPrice(), room.getStatus());
     }
-
-//    // ✅ Update room status (Available / Booked)
-//    public int updateRoomStatus(int roomId, String status) {
-//        String sql = "UPDATE rooms SET status = ? WHERE id = ?";
-//        return jdbcTemplate.update(sql, status, roomId);
-//    }
 
     // ✅ Delete a room
     public int deleteRoom(int id) {

@@ -9,38 +9,37 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import java.sql.Date;
 import java.util.List;
 
 @Service
 public class BookingService {
     private final BookingRepository bookingRepository;
     private final RoomService roomService;
+//    private final PaymentService paymentService;
     private static final Logger logger = LoggerFactory.getLogger(BookingService.class);
+
 
     public BookingService(BookingRepository bookingRepository, RoomService roomService) {
         this.bookingRepository = bookingRepository;
         this.roomService = roomService;
+//        this.paymentService = paymentService;
     }
 
-    // ✅ Retrieve all bookings
-    public List<Booking> getAllBookings() {
-        logger.info("Fetching all bookings...");
-        return bookingRepository.getAllBookings();
+    // ✅ Retrieve all bookings for a customer
+    public List<Booking> getBookingsByCustomerId(int customerId) {
+        logger.info("Fetching bookings for customer ID {}", customerId);
+        return bookingRepository.getBookingsByCustomerId(customerId);
     }
 
     // ✅ Get a booking by ID
     public Booking getBookingById(int id) {
         logger.info("Fetching booking with ID {}", id);
-        Booking booking = bookingRepository.getBookingById(id);
-
-        if (booking == null) {
-            logger.error("Booking with ID {} not found", id);
-            throw new ResourceNotFoundException("Booking with ID " + id + " not found.");
-        }
-
-        return booking;
+        return bookingRepository.getBookingById(id)
+                .orElseThrow(() -> {
+                    logger.error("Booking with ID {} not found", id);
+                    return new ResourceNotFoundException("Booking with ID " + id + " not found.");
+                });
     }
 
     // ✅ Create a new booking and mark room as "Booked"
@@ -57,11 +56,7 @@ public class BookingService {
         }
 
         // Validate check-in and check-out dates
-        LocalDate checkIn = booking.getCheckInDate().toLocalDate();
-        LocalDate checkOut = booking.getCheckOutDate().toLocalDate();
-        long daysStayed = ChronoUnit.DAYS.between(checkIn, checkOut);
-
-        if (daysStayed <= 0) {
+        if (booking.getCheckInDate().after(booking.getCheckOutDate())) {
             throw new IllegalArgumentException("Check-out date must be after check-in date.");
         }
 
@@ -72,15 +67,21 @@ public class BookingService {
         logger.info("Booking created successfully! Room ID {} is now marked as Booked.", booking.getRoomId());
     }
 
-    // ✅ Update check-in and check-out dates
-    public void updateBookingDates(int id, LocalDate checkIn, LocalDate checkOut) {
-        logger.info("Updating booking ID {}: New dates -> Check-in: {}, Check-out: {}", id, checkIn, checkOut);
 
-        if (ChronoUnit.DAYS.between(checkIn, checkOut) <= 0) {
-            throw new IllegalArgumentException("Invalid check-in and check-out dates.");
-        }
+    // ✅ Cancel a booking and roll back payment
+    @Transactional
+    public void cancelBooking(int id) {
+        logger.warn("Cancelling booking with ID {}", id);
+        Booking booking = getBookingById(id);
 
-        bookingRepository.updateBookingDates(id, java.sql.Date.valueOf(checkIn), java.sql.Date.valueOf(checkOut));
+        // ✅ Roll back payment before deleting booking
+//        paymentService.refundPaymentByBookingId(booking.getId());
+
+        // ✅ Delete booking and update room status
+        bookingRepository.deleteBooking(id);
+        roomService.updateRoomStatus(booking.getRoomId(), "Available");
+
+        logger.info("Booking ID {} canceled. Room ID {} is now Available.", id, booking.getRoomId());
     }
 
     // ✅ Delete a booking and mark room as "Available"

@@ -18,41 +18,42 @@ public class PaymentRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // ✅ Retrieve all payments
-    public List<Payment> getAllPayments() {
-        String sql = "SELECT * FROM payments";
-        return jdbcTemplate.query(sql, new PaymentRowMapper());
+    // ✅ Retrieve all payments for a customer
+    public List<Payment> getPaymentsByCustomerId(int customerId) {
+        String sql = "SELECT p.* FROM payments p JOIN bookings b ON p.booking_id = b.id WHERE b.customer_id = ?";
+        return jdbcTemplate.query(sql, new PaymentRowMapper(), customerId);
     }
 
-    // ✅ Find a payment by ID
-    public Payment getPaymentById(int id) {
+    // ✅ Get payment by ID
+    public Optional<Payment> getPaymentById(int paymentId) {
         String sql = "SELECT * FROM payments WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new PaymentRowMapper(), id);
-    }
-
-
-
-    public Optional<Payment> getPaymentByBookingId(int bookingId) {
-        String sql = "SELECT * FROM payments WHERE booking_id = ?";
-
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new PaymentRowMapper(), bookingId));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new PaymentRowMapper(), paymentId));
         } catch (Exception e) {
-            return Optional.empty(); // Return empty if no payment is found
+            return Optional.empty();
         }
     }
 
-
-    // ✅ Save a new payment
-    public int savePayment(Payment payment) {
-        String sql = "INSERT INTO payments (booking_id, amount, payment_date, payment_method) VALUES (?, ?, ?, ?)";
-        return jdbcTemplate.update(sql, payment.getBookingId(), payment.getAmount(), payment.getPaymentDate(), payment.getPaymentMethod());
+    // ✅ Retrieve a payment by booking ID
+    public Optional<Payment> getPaymentByBookingId(int bookingId) {
+        String sql = "SELECT * FROM payments WHERE booking_id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new PaymentRowMapper(), bookingId));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    // ✅ Delete a payment
-    public int deletePayment(int id) {
-        String sql = "DELETE FROM payments WHERE id = ?";
-        return jdbcTemplate.update(sql, id);
+    // ✅ Save a new payment
+    public void savePayment(Payment payment) {
+        String sql = "INSERT INTO payments (booking_id, amount, payment_method, payment_date) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, payment.getBookingId(), payment.getAmount(), payment.getPaymentMethod(), payment.getPaymentDate());
+    }
+
+    // ✅ Delete a payment when booking is canceled
+    public int deletePaymentByBookingId(int bookingId) {
+        String sql = "DELETE FROM payments WHERE booking_id = ?";
+        return jdbcTemplate.update(sql, bookingId);
     }
 
     // ✅ Row Mapper for Payment object
@@ -65,6 +66,7 @@ public class PaymentRepository {
                     rs.getDouble("amount"),
                     rs.getTimestamp("payment_date"),
                     rs.getString("payment_method")
+
             );
         }
     }

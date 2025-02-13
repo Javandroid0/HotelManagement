@@ -2,6 +2,7 @@ package com.javandroid.hotelbookingsystem.model;
 
 
 import java.sql.Date;
+import java.util.List;
 
 public class Booking {
     private int id;
@@ -10,6 +11,7 @@ public class Booking {
     private Date bookingDate;
     private Date checkInDate;
     private Date checkOutDate;
+    private List<AdditionalService> additionalServices;
 
     // Constructors
     public Booking() {}
@@ -35,4 +37,13 @@ public class Booking {
     public void setCheckInDate(Date checkInDate) { this.checkInDate = checkInDate; }
     public Date getCheckOutDate() { return checkOutDate; }
     public void setCheckOutDate(Date checkOutDate) { this.checkOutDate = checkOutDate; }
+
+
+    public List<AdditionalService> getAdditionalServices() {
+        return additionalServices;
+    }
+
+    public void setAdditionalServices(List<AdditionalService> additionalServices) {
+        this.additionalServices = additionalServices;
+    }
 }

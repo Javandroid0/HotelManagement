@@ -17,6 +17,12 @@ public class Customer {
         this.phone = phone;
         this.address = address;
     }
+    public Customer( String name,String email, String phone,String address) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+    }
 
     // Getters & Setters
     public int getId() { return id; }

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Customer Profile</title>
+</head>
+<body>
+<h1>Customer Profile</h1>
+<p><strong>Name:</strong> <span th:text="${customer.name}"></span></p>
+<p><strong>Email:</strong> <span th:text="${customer.email}"></span></p>
+<p><strong>Phone:</strong> <span th:text="${customer.phone}"></span></p>
+<p><strong>Address:</strong> <span th:text="${customer.address}"></span></p>
+<a href="/customer/edit">Edit Profile</a> |
+<a href="/customer/logout">Logout</a>
+
+<p><a href="/customer/home">Back to Dashboard</a></p>
+</body>
+
+
+</html>
