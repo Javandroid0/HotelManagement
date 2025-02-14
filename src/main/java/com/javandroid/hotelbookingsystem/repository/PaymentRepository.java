@@ -18,13 +18,13 @@ public class PaymentRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // ✅ Retrieve all payments for a customer
+    //Retrieve all payments for a customer
     public List<Payment> getPaymentsByCustomerId(int customerId) {
         String sql = "SELECT p.* FROM payments p JOIN bookings b ON p.booking_id = b.id WHERE b.customer_id = ?";
         return jdbcTemplate.query(sql, new PaymentRowMapper(), customerId);
     }
 
-    // ✅ Get payment by ID
+    //Get payment by ID
     public Optional<Payment> getPaymentById(int paymentId) {
         String sql = "SELECT * FROM payments WHERE id = ?";
         try {
@@ -34,7 +34,7 @@ public class PaymentRepository {
         }
     }
 
-    // ✅ Retrieve a payment by booking ID
+    //Retrieve a payment by booking ID
     public Optional<Payment> getPaymentByBookingId(int bookingId) {
         String sql = "SELECT * FROM payments WHERE booking_id = ?";
         try {
@@ -44,19 +44,27 @@ public class PaymentRepository {
         }
     }
 
-    // ✅ Save a new payment
+    //Save a new payment
     public void savePayment(Payment payment) {
         String sql = "INSERT INTO payments (booking_id, amount, payment_method, payment_date) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(sql, payment.getBookingId(), payment.getAmount(), payment.getPaymentMethod(), payment.getPaymentDate());
     }
 
-    // ✅ Delete a payment when booking is canceled
+    //Delete a payment when booking is canceled
     public int deletePaymentByBookingId(int bookingId) {
         String sql = "DELETE FROM payments WHERE booking_id = ?";
         return jdbcTemplate.update(sql, bookingId);
     }
 
-    // ✅ Row Mapper for Payment object
+    public double getTotalPaymentsByCustomerId(int customerId) {
+        String sql = "SELECT SUM(amount) FROM payments WHERE booking_id IN " +
+                "(SELECT id FROM bookings WHERE customer_id = ?)";
+
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, Double.class, customerId)).orElse(0.0);
+    }
+
+
+    //Row Mapper for Payment object
     private static class PaymentRowMapper implements RowMapper<Payment> {
         @Override
         public Payment mapRow(ResultSet rs, int rowNum) throws SQLException {

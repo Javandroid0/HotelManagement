@@ -6,7 +6,7 @@ public class AdditionalService {
     private String name;
     private double price;
 
-    // Constructors
+    //Constructors
     public AdditionalService() {}
     public AdditionalService(int id, String name, double price) {
         this.id = id;
@@ -14,7 +14,7 @@ public class AdditionalService {
         this.price = price;
     }
 
-    // Getters & Setters
+    //Getters & Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public String getName() { return name; }

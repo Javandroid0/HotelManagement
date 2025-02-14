@@ -1,6 +1,8 @@
 package com.javandroid.hotelbookingsystem.repository;
 
 import com.javandroid.hotelbookingsystem.model.AdditionalService;
+import com.javandroid.hotelbookingsystem.model.Booking;
+import com.javandroid.hotelbookingsystem.service.BookingService;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -18,13 +20,13 @@ public class AdditionalServiceRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // ✅ Retrieve all available services
+    //Retrieve all available services
     public List<AdditionalService> getAllServices() {
         String sql = "SELECT * FROM additional_services";
         return jdbcTemplate.query(sql, new AdditionalServiceRowMapper());
     }
 
-    // ✅ Get a service by ID
+    //Get a service by ID
     public Optional<AdditionalService> getServiceById(int id) {
         String sql = "SELECT * FROM additional_services WHERE id = ?";
         try {
@@ -34,13 +36,21 @@ public class AdditionalServiceRepository {
         }
     }
 
-    // ✅ Request an additional service for a booking
+    public List<AdditionalService> getServicesForCustomer(int customerId) {
+        String sql = "SELECT s.*, bs.booking_id FROM additional_services s " +
+                "JOIN booking_services bs ON s.id = bs.service_id " +
+                "JOIN bookings b ON bs.booking_id = b.id " +
+                "WHERE b.customer_id = ?";
+        return jdbcTemplate.query(sql, new AdditionalServiceRowMapper(), customerId);
+    }
+
+    //Request an additional service for a booking
     public void addServiceToBooking(int bookingId, int serviceId) {
         String sql = "INSERT INTO booking_services (booking_id, service_id) VALUES (?, ?)";
         jdbcTemplate.update(sql, bookingId, serviceId);
     }
 
-    // ✅ Get services requested for a specific booking
+    //Get services requested for a specific booking
     public List<AdditionalService> getServicesForBooking(int bookingId) {
         String sql = "SELECT s.* FROM additional_services s " +
                 "JOIN booking_services bs ON s.id = bs.service_id " +
@@ -49,14 +59,14 @@ public class AdditionalServiceRepository {
     }
 
 
-    // ✅ Remove an additional service from a booking
+    //Remove an additional service from a booking
     public void removeServiceFromBooking(int bookingId, int serviceId) {
         String sql = "DELETE FROM booking_services WHERE booking_id = ? AND service_id = ?";
         jdbcTemplate.update(sql, bookingId, serviceId);
     }
 
 
-    // ✅ Row Mapper for AdditionalService object
+    //Row Mapper for AdditionalService object
     private static class AdditionalServiceRowMapper implements RowMapper<AdditionalService> {
         @Override
         public AdditionalService mapRow(ResultSet rs, int rowNum) throws SQLException {

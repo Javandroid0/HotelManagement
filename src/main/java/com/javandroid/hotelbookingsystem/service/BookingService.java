@@ -2,6 +2,7 @@ package com.javandroid.hotelbookingsystem.service;
 
 import com.javandroid.hotelbookingsystem.exception.ResourceNotFoundException;
 import com.javandroid.hotelbookingsystem.model.Booking;
+import com.javandroid.hotelbookingsystem.model.BookingServices;
 import com.javandroid.hotelbookingsystem.model.Room;
 import com.javandroid.hotelbookingsystem.repository.BookingRepository;
 import org.slf4j.Logger;
@@ -9,30 +10,28 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
 import java.util.List;
 
 @Service
 public class BookingService {
     private final BookingRepository bookingRepository;
     private final RoomService roomService;
-//    private final PaymentService paymentService;
+
     private static final Logger logger = LoggerFactory.getLogger(BookingService.class);
 
 
     public BookingService(BookingRepository bookingRepository, RoomService roomService) {
         this.bookingRepository = bookingRepository;
         this.roomService = roomService;
-//        this.paymentService = paymentService;
     }
 
-    // ✅ Retrieve all bookings for a customer
+    //Retrieve all bookings for a customer
     public List<Booking> getBookingsByCustomerId(int customerId) {
         logger.info("Fetching bookings for customer ID {}", customerId);
         return bookingRepository.getBookingsByCustomerId(customerId);
     }
 
-    // ✅ Get a booking by ID
+    //Get a booking by ID
     public Booking getBookingById(int id) {
         logger.info("Fetching booking with ID {}", id);
         return bookingRepository.getBookingById(id)
@@ -42,7 +41,7 @@ public class BookingService {
                 });
     }
 
-    // ✅ Create a new booking and mark room as "Booked"
+    //Create a new booking and mark room as "Booked"
     @Transactional
     public void createBooking(Booking booking) {
         logger.info("Creating a new booking for Customer ID: {}", booking.getCustomerId());
@@ -68,23 +67,13 @@ public class BookingService {
     }
 
 
-    // ✅ Cancel a booking and roll back payment
-    @Transactional
-    public void cancelBooking(int id) {
-        logger.warn("Cancelling booking with ID {}", id);
-        Booking booking = getBookingById(id);
 
-        // ✅ Roll back payment before deleting booking
-//        paymentService.refundPaymentByBookingId(booking.getId());
-
-        // ✅ Delete booking and update room status
-        bookingRepository.deleteBooking(id);
-        roomService.updateRoomStatus(booking.getRoomId(), "Available");
-
-        logger.info("Booking ID {} canceled. Room ID {} is now Available.", id, booking.getRoomId());
+    public List<BookingServices> getBookingServicesByCustomerId(int customerId) {
+        logger.info("Fetching additional services for Customer ID {}", customerId);
+        return bookingRepository.getBookingServicesByCustomerId(customerId);
     }
 
-    // ✅ Delete a booking and mark room as "Available"
+    //Delete a booking and mark room as "Available"
     @Transactional
     public void deleteBooking(int id) {
         logger.warn("Deleting booking with ID {}", id);
@@ -92,6 +81,7 @@ public class BookingService {
 
         // Delete booking and update room status
         bookingRepository.deleteBooking(id);
+
         roomService.updateRoomStatus(booking.getRoomId(), "Available");
 
         logger.info("Booking ID {} deleted. Room ID {} is now marked as Available.", id, booking.getRoomId());

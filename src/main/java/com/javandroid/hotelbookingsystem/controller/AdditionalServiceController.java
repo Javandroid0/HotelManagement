@@ -26,7 +26,7 @@ public class AdditionalServiceController {
         this.bookingService = bookingService;
     }
 
-    // ✅ Show available additional services
+    //Show available additional services
     @GetMapping
     public String getAvailableServices(HttpSession session, Model model) {
         Customer loggedUser = (Customer) session.getAttribute("loggedUser");
@@ -42,7 +42,7 @@ public class AdditionalServiceController {
         return "additional-services"; // Returns additional-services.html
     }
 
-    // ✅ Request an additional service for a booking
+    //Request an additional service for a booking
     @PostMapping("/request")
     public String requestService(@RequestParam int bookingId, @RequestParam int serviceId, HttpSession session) {
         Customer loggedUser = (Customer) session.getAttribute("loggedUser");
@@ -62,7 +62,7 @@ public class AdditionalServiceController {
         return "redirect:/additional-services?success=Service added";
     }
 
-    // ✅ Remove an additional service from a booking
+    //Remove an additional service from a booking
     @GetMapping("/remove")
     public String removeService(@RequestParam int bookingId, @RequestParam int serviceId, HttpSession session) {
         Customer loggedUser = (Customer) session.getAttribute("loggedUser");

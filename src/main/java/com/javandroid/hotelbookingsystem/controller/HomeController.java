@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
-    // ✅ Customer dashboard (only accessible if logged in)
+    //Customer dashboard (only accessible if logged in)
     @GetMapping("/customer/home")
     public String customerHome(HttpSession session, Model model) {
         Customer loggedUser = (Customer) session.getAttribute("loggedUser");
@@ -27,7 +27,7 @@ public class HomeController {
         return "customer-home"; // Returns customer-home.html
     }
 
-    // ✅ Admin panel (accessible without authentication)
+    //Admin panel (accessible without authentication)
     @GetMapping("/admin")
     public String adminHome() {
         logger.info("Admin panel accessed");

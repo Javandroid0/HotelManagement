@@ -1,22 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Payments</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
-        table { margin: auto; border-collapse: collapse; width: 80%; }
-        th, td { border: 1px solid black; padding: 10px; text-align: center; }
-        th { background-color: #007bff; color: white; }
-        a { text-decoration: none; color: white; background-color: red; padding: 5px; border-radius: 5px; }
-    </style>
+    <title>My Payments</title>
+    <script>
+        function confirmDelete(paymentId) {
+            return confirm("Are you sure you want to delete Payment ID " + paymentId + "? This action cannot be undone.");
+        }
+    </script>
 </head>
 <body>
+<h1>My Payments</h1>
 
-<h1>Payments</h1>
-<a href="/payments/pay">Process New Payment</a>
-<table>
+<!-- ✅ Show debt information -->
+<p th:if="${debt > 0}" style="color: red;">
+    You have an outstanding debt of $<span th:text="${debt}"></span>. Please settle your dues.
+</p>
+
+<h2>Your Bookings</h2>
+<table border="1">
     <tr>
-        <th>ID</th><th>Booking ID</th><th>Amount</th><th>Payment Date</th><th>Method</th><th>Action</th>
+        <th>Booking ID</th>
+        <th>Room</th>
+        <th>Check-in</th>
+        <th>Check-out</th>
+        <th>Action</th>
+    </tr>
+    <tr th:each="booking : ${bookings}">
+        <td th:text="${booking.id}"></td>
+        <td th:text="${booking.roomId}"></td>
+        <td th:text="${booking.checkInDate}"></td>
+        <td th:text="${booking.checkOutDate}"></td>
+        <td>
+            <a th:href="@{/payments/pay(bookingId=${booking.id})}">Pay Now</a>
+        </td>
+    </tr>
+</table>
+
+<h2>Previous Payments</h2>
+<table border="1">
+    <tr>
+        <th>Payment ID</th>
+        <th>Booking ID</th>
+        <th>Amount</th>
+        <th>Payment Date</th>
+        <th>Method</th>
+        <th>Action</th>
     </tr>
     <tr th:each="payment : ${payments}">
         <td th:text="${payment.id}"></td>
@@ -24,9 +52,58 @@
         <td th:text="${payment.amount}"></td>
         <td th:text="${payment.paymentDate}"></td>
         <td th:text="${payment.paymentMethod}"></td>
-        <td><a th:href="@{/payments/delete/{id}(id=${payment.id})}">Delete</a></td>
+        <td>
+            <a th:href="@{/payments/delete/{id}(id=${payment.id})}"
+               th:attr="onclick='return confirmDelete(\'' + ${payment.id} + '\')'">
+                Delete
+            </a>
+        </td>
     </tr>
 </table>
+
+<h2>Additional Services</h2>
+<table border="1">
+    <tr>
+        <th>Service Name</th>
+        <th>Price</th>
+        <th>Linked Booking</th>
+    </tr>
+    <tr th:each="service : ${services}">
+        <td th:text="${service.name}"></td>
+        <td th:text="${service.price}"></td>
+        <td th:text="'Service #' + ${service.id}"></td>
+    </tr>
+</table>
+
+<h2>Additional Services</h2>
+<table border="1">
+    <tr>
+        <th>Service Name</th>
+        <th>Price</th>
+        <th>Linked Booking</th>
+        <th>Payment Method</th>
+        <th>Action</th>
+    </tr>
+    <tr th:each="bookingService : ${bookingServices}">
+        <td th:text="'Booking #' + ${bookingService.bookingId}"></td>
+        <td th:text="'Services #' + ${bookingService.serviceId}"></td>
+        <td>
+            <form action="/payments/pay-service" method="post">
+                <input type="hidden" name="bookingId" th:value="${bookingService.bookingId}">
+                <input type="hidden" name="serviceId" th:value="${bookingService.serviceId}">
+                <select name="paymentMethod" required>
+                    <option value="Credit Card">Credit Card</option>
+                    <option value="Cash">Cash</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                </select>
+                <button type="submit">Pay Now</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+
+
 <p><a href="/customer/home">Back to Dashboard</a></p>
 </body>
 </html>

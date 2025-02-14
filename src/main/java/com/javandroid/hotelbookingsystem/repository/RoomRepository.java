@@ -42,19 +42,19 @@ public class RoomRepository {
         jdbcTemplate.update(sql, status, roomId);
     }
 
-    // ✅ Save a new room
+    //Save a new room
     public int saveRoom(Room room) {
         String sql = "INSERT INTO rooms (type, price, status) VALUES (?, ?, ?)";
         return jdbcTemplate.update(sql, room.getType(), room.getPrice(), room.getStatus());
     }
 
-    // ✅ Delete a room
+    //Delete a room
     public int deleteRoom(int id) {
         String sql = "DELETE FROM rooms WHERE id = ?";
         return jdbcTemplate.update(sql, id);
     }
 
-    // ✅ Row Mapper for Room object
+    //Row Mapper for Room object
     private static class RoomRowMapper implements RowMapper<Room> {
         @Override
         public Room mapRow(ResultSet rs, int rowNum) throws SQLException {

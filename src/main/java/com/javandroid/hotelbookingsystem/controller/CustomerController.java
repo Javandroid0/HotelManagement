@@ -19,7 +19,7 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    // ✅ Display customer profile
+    //Display customer profile
     @GetMapping("/profile")
     public String viewProfile(HttpSession session, Model model) {
         Customer loggedUser = (Customer) session.getAttribute("loggedUser");
@@ -32,7 +32,7 @@ public class CustomerController {
         return "customer-profile"; // Returns customer-profile.html
     }
 
-    // ✅ Show profile edit form
+    //Show profile edit form
     @GetMapping("/edit")
     public String showEditProfileForm(HttpSession session, Model model) {
         Customer loggedUser = (Customer) session.getAttribute("loggedUser");
@@ -45,7 +45,7 @@ public class CustomerController {
         return "edit-profile"; // Returns edit-profile.html
     }
 
-    // ✅ Handle profile update
+    //Handle profile update
     @PostMapping("/update")
     public String updateProfile(@RequestParam String name, @RequestParam String email, @RequestParam String phone,@RequestParam String address, HttpSession session) {
         Customer loggedUser = (Customer) session.getAttribute("loggedUser");
@@ -65,7 +65,7 @@ public class CustomerController {
         return "redirect:/customer/profile";
     }
 
-    // ✅ Handle logout
+    //Handle logout
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         logger.info("Customer {} logged out", session.getAttribute("loggedUser"));

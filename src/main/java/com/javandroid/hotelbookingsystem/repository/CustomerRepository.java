@@ -17,7 +17,7 @@ public class CustomerRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // ✅ Find a customer by email and phone
+    //Find a customer by email and phone
     public Optional<Customer> findByEmailAndPhone(String email, String phone) {
         String sql = "SELECT * FROM customers WHERE email = ? AND phone = ?";
         try {
@@ -27,7 +27,7 @@ public class CustomerRepository {
         }
     }
 
-    // ✅ Find a customer by ID
+    //Find a customer by ID
     public Optional<Customer> findById(int id) {
         String sql = "SELECT * FROM customers WHERE id = ?";
         try {
@@ -37,19 +37,19 @@ public class CustomerRepository {
         }
     }
 
-    // ✅ Register a new customer
+    //Register a new customer
     public void save(Customer customer) {
         String sql = "INSERT INTO customers (name, email, phone) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, customer.getName(), customer.getEmail(), customer.getPhone());
     }
 
-    // ✅ Update customer details
+    //Update customer details
     public void updateCustomer(int id, String name, String email, String phone,String address) {
         String sql = "UPDATE customers SET name = ?, email = ?, phone = ?, address = ? WHERE id = ?";
         jdbcTemplate.update(sql, name, email, phone,address, id);
     }
 
-    // ✅ Row Mapper for Customer object
+    //Row Mapper for Customer object
     private static class CustomerRowMapper implements RowMapper<Customer> {
         @Override
         public Customer mapRow(ResultSet rs, int rowNum) throws SQLException {

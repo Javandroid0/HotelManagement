@@ -19,7 +19,7 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    // ✅ Get a customer by ID
+    //Get a customer by ID
     public Customer getCustomerById(int id) {
         logger.info("Fetching customer with ID {}", id);
         return customerRepository.findById(id)
@@ -29,7 +29,7 @@ public class CustomerService {
                 });
     }
 
-    // ✅ Update customer information
+    //Update customer information
     @Transactional
     public void updateCustomer(int id, String name, String email, String phone,String address) {
         logger.info("Updating customer ID {}: Name={}, Email={}, Phone={}, Address={}", id, name, email, phone,address);

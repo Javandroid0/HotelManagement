@@ -19,19 +19,13 @@ public class RoomService {
         this.roomRepository = roomRepository;
     }
 
-    // ✅ Retrieve all available rooms
+    //Retrieve all available rooms
     public List<Room> getAvailableRooms() {
         logger.info("Fetching all available rooms...");
         return roomRepository.findAvailableRooms();
     }
 
-    // ✅ Retrieve all rooms (including booked ones)
-    public List<Room> getAllRooms() {
-        logger.info("Fetching all rooms...");
-        return roomRepository.getAllRooms();
-    }
-
-    // ✅ Get a room by ID
+    //Get a room by ID
     public Room getRoomById(int id) {
         logger.info("Fetching room with ID {}", id);
         Room room = roomRepository.getRoomById(id);
@@ -42,20 +36,7 @@ public class RoomService {
         return room;
     }
 
-    // ✅ Mark room as "Booked" when a booking is created
-    @Transactional
-    public void markRoomAsBooked(int roomId) {
-        logger.info("Marking room ID {} as 'Booked'", roomId);
-        Room room = getRoomById(roomId);
-
-        if (!"Available".equalsIgnoreCase(room.getStatus())) {
-            throw new IllegalStateException("Room ID " + roomId + " is already booked.");
-        }
-
-        roomRepository.updateRoomStatus(roomId, "Booked");
-    }
-
-    // ✅ Mark room as "Available" when a booking is deleted
+    //Mark room as "Available" when a booking is deleted
     @Transactional
     public void markRoomAsAvailable(int roomId) {
         logger.info("Marking room ID {} as 'Available'", roomId);
@@ -69,7 +50,7 @@ public class RoomService {
         roomRepository.updateRoomStatus(roomId, "Available");
     }
 
-    // ✅ Update room status manually
+    //Update room status manually
     @Transactional
     public void updateRoomStatus(int roomId, String status) {
         logger.info("Updating room ID {} to status '{}'", roomId, status);
@@ -80,7 +61,7 @@ public class RoomService {
         roomRepository.updateRoomStatus(roomId, status);
     }
 
-    // ✅ Add a new room
+    //Add a new room
     @Transactional
     public void addRoom(Room room) {
         logger.info("Adding new room: Type - {}, Price - {}", room.getType(), room.getPrice());
@@ -88,7 +69,7 @@ public class RoomService {
         roomRepository.saveRoom(room);
     }
 
-    // ✅ Delete a room
+    //Delete a room
     @Transactional
     public void deleteRoom(int roomId) {
         logger.warn("Deleting room with ID {}", roomId);

@@ -17,7 +17,7 @@ public class RoomController {
         this.roomService = roomService;
     }
 
-    // ✅ Display all rooms
+    //Display all rooms
     @GetMapping
     public String getAllRooms(Model model) {
         List<Room> rooms = roomService.getAvailableRooms();
@@ -25,28 +25,28 @@ public class RoomController {
         return "rooms"; // Returns rooms.html
     }
 
-    // ✅ Show form to add a new room
+    //Show form to add a new room
     @GetMapping("/new")
     public String showRoomForm(Model model) {
         model.addAttribute("room", new Room());
         return "room-form"; // Returns room-form.html
     }
 
-    // ✅ Handle room creation
+    //Handle room creation
     @PostMapping
     public String addRoom(@ModelAttribute Room room) {
         roomService.addRoom(room);
         return "redirect:/rooms"; // Redirect to rooms list
     }
 
-    // ✅ Update room status
+    //Update room status
     @PostMapping("/{id}/status")
     public String updateRoomStatus(@PathVariable int id, @RequestParam String status) {
         roomService.updateRoomStatus(id, status);
         return "redirect:/rooms"; // Refresh room list
     }
 
-    // ✅ Delete a room
+    //Delete a room
     @GetMapping("/delete/{id}")
     public String deleteRoom(@PathVariable int id) {
         roomService.deleteRoom(id);

@@ -18,13 +18,13 @@ public class AuthService {
         this.customerRepository = customerRepository;
     }
 
-    // ✅ Authenticate customer (Login)
+    //Authenticate customer (Login)
     public Optional<Customer> authenticateUser(String email, String phone) {
         logger.info("Authenticating user with email: {}", email);
         return customerRepository.findByEmailAndPhone(email, phone);
     }
 
-    // ✅ Register a new customer
+    //Register a new customer
     @Transactional
     public Customer registerUser(String name, String email, String phone, String address) {
         logger.info("Registering new customer: {}", email);

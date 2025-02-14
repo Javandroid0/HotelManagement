@@ -24,7 +24,7 @@ public class BookingController {
         this.roomService = roomService;
     }
 
-    // ✅ Show room booking form with available rooms
+    //Show room booking form with available rooms
     @GetMapping("/new")
     public String showBookingForm(Model model) {
         List<Room> availableRooms = roomService.getAvailableRooms(); // Get available rooms
@@ -32,7 +32,7 @@ public class BookingController {
         return "booking-form"; // Returns booking-form.html
     }
 
-    // ✅ Handle room booking
+    //Handle room booking
     @PostMapping("/book")
     public String bookRoom(@RequestParam int roomId, @RequestParam Date checkInDate, @RequestParam Date checkOutDate, HttpSession session) {
         Customer loggedUser = (Customer) session.getAttribute("loggedUser");
@@ -50,7 +50,7 @@ public class BookingController {
         return "redirect:/bookings";
     }
 
-    // ✅ Display all bookings for the logged-in customer
+    //Display all bookings for the logged-in customer
     @GetMapping
     public String getCustomerBookings(HttpSession session, Model model) {
         Customer loggedUser = (Customer) session.getAttribute("loggedUser");
@@ -63,7 +63,7 @@ public class BookingController {
         return "customer-bookings"; // Returns customer-bookings.html
     }
 
-    // ✅ Cancel booking (Only the logged-in customer can cancel their own booking)
+    //Cancel booking (Only the logged-in customer can cancel their own booking)
     @GetMapping("/cancel/{id}")
     public String cancelBooking(@PathVariable int id, HttpSession session) {
         Customer loggedUser = (Customer) session.getAttribute("loggedUser");

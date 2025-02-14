@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    // ✅ Handle generic exceptions
+    //Handle generic exceptions
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleGeneralException(Exception ex, Model model) {
@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
         return "error"; // Returns error.html page
     }
 
-    // ✅ Handle resource not found exceptions (e.g., booking not found)
+    //Handle resource not found exceptions (e.g., booking not found)
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleResourceNotFound(ResourceNotFoundException ex, Model model) {
@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
         return "error"; // Returns error.html page
     }
 
-    // ✅ Handle invalid input exceptions
+    //Handle invalid input exceptions
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleInvalidInput(IllegalArgumentException ex, Model model) {

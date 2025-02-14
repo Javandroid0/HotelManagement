@@ -20,13 +20,13 @@ public class AdditionalServiceService {
         this.additionalServiceRepository = additionalServiceRepository;
     }
 
-    // ✅ Retrieve all available services
+    //Retrieve all available services
     public List<AdditionalService> getAllServices() {
         logger.info("Fetching all available additional services...");
         return additionalServiceRepository.getAllServices();
     }
 
-    // ✅ Get service by ID
+    //Get service by ID
     public AdditionalService getServiceById(int id) {
         logger.info("Fetching service with ID {}", id);
         return additionalServiceRepository.getServiceById(id)
@@ -36,7 +36,7 @@ public class AdditionalServiceService {
                 });
     }
 
-    // ✅ Request an additional service for a booking
+    //Request an additional service for a booking
     @Transactional
     public void addServiceToBooking(int bookingId, int serviceId) {
         logger.info("Adding Service ID {} to Booking ID {}", serviceId, bookingId);
@@ -44,13 +44,13 @@ public class AdditionalServiceService {
         logger.info("Service ID {} successfully added to Booking ID {}", serviceId, bookingId);
     }
 
-    // ✅ Retrieve all services linked to a specific booking
+    //Retrieve all services linked to a specific booking
     public List<AdditionalService> getServicesForBooking(int bookingId) {
         logger.info("Fetching services for Booking ID {}", bookingId);
         return additionalServiceRepository.getServicesForBooking(bookingId);
     }
 
-    // ✅ Cancel a requested service from a booking
+    //Cancel a requested service from a booking
     @Transactional
     public void removeServiceFromBooking(int bookingId, int serviceId) {
         logger.info("Removing Service ID {} from Booking ID {}", serviceId, bookingId);

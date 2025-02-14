@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class LoggingAspect {
     private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
 
-    // ✅ Log execution time of all Service methods
+    //Log execution time of all Service methods
     @Around("execution(* com.javandroid.hotelbookingsystem.service.*.*(..))")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
@@ -25,19 +25,19 @@ public class LoggingAspect {
         return result;
     }
 
-    // ✅ Log when any method in Service layer is called
+    //Log when any method in Service layer is called
     @Before("execution(* com.javandroid.hotelbookingsystem.service.*.*(..))")
     public void logBeforeServiceMethod() {
         logger.info("A service method was called.");
     }
 
-    // ✅ Log when any Repository method is called
+    //Log when any Repository method is called
     @Before("execution(* com.javandroid.hotelbookingsystem.repository.*.*(..))")
     public void logBeforeRepositoryMethod() {
         logger.info("A repository method was called.");
     }
 
-    // ✅ Log exceptions in Service methods
+    //Log exceptions in Service methods
     @AfterThrowing(pointcut = "execution(* com.javandroid.hotelbookingsystem.service.*.*(..))", throwing = "ex")
     public void logServiceException(Exception ex) {
         logger.error("An error occurred in Service Layer: {}", ex.getMessage());

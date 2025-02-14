@@ -21,13 +21,13 @@ public class AuthController {
         this.authService = authService;
     }
 
-    // ✅ Show login page
+    //Show login page
     @GetMapping("/login")
     public String showLoginPage() {
         return "login"; // Returns login.html
     }
 
-    // ✅ Handle login
+    //Handle login
     @PostMapping("/login")
     public String loginUser(@RequestParam String email, @RequestParam String phone, HttpSession session) {
         Optional<Customer> customer = authService.authenticateUser(email, phone);
@@ -42,13 +42,13 @@ public class AuthController {
         }
     }
 
-    // ✅ Show registration page
+    //Show registration page
     @GetMapping("/register")
     public String showRegisterPage() {
         return "register"; // Returns register.html
     }
 
-    // ✅ Handle user registration
+    //Handle user registration
     @PostMapping("/register")
     public String registerUser(@RequestParam String name, @RequestParam String email, @RequestParam String phone, @RequestParam String address,HttpSession session) {
         try {
@@ -62,7 +62,7 @@ public class AuthController {
         }
     }
 
-    // ✅ Handle logout
+    //Handle logout
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         logger.info("User {} logged out", session.getAttribute("loggedUser"));

@@ -1,6 +1,9 @@
 package com.javandroid.hotelbookingsystem.repository;
 
 import com.javandroid.hotelbookingsystem.model.Booking;
+//import com.javandroid.hotelbookingsystem.service.BookingService;
+import com.javandroid.hotelbookingsystem.model.BookingServices;
+import com.javandroid.hotelbookingsystem.service.BookingServiceRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -18,13 +21,23 @@ public class BookingRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // ✅ Retrieve all bookings for a customer
+    //Retrieve all bookings for a customer
     public List<Booking> getBookingsByCustomerId(int customerId) {
         String sql = "SELECT * FROM bookings WHERE customer_id = ?";
         return jdbcTemplate.query(sql, new BookingRowMapper(), customerId);
     }
 
-    // ✅ Retrieve a booking by ID (Fix `orElseThrow()` issue)
+
+    public List<BookingServices> getBookingServicesByCustomerId(int customerId) {
+        String sql = "SELECT bs.booking_id, bs.service_id " +
+                "FROM booking_services bs " +
+                "JOIN bookings b ON bs.booking_id = b.id " +
+                "JOIN additional_services s ON bs.service_id = s.id " +
+                "WHERE b.customer_id = ?";
+        return jdbcTemplate.query(sql, new BookingServiceRowMapper(), customerId);
+    }
+
+    //Retrieve a booking by ID (Fix `orElseThrow()` issue)
     public Optional<Booking> getBookingById(int id) {
         String sql = "SELECT * FROM bookings WHERE id = ?";
         try {
@@ -34,19 +47,19 @@ public class BookingRepository {
         }
     }
 
-    // ✅ Save a new booking
+    //Save a new booking
     public void saveBooking(Booking booking) {
         String sql = "INSERT INTO bookings (customer_id, room_id, check_in_date, check_out_date) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(sql, booking.getCustomerId(), booking.getRoomId(), booking.getCheckInDate(), booking.getCheckOutDate());
     }
 
-    // ✅ Delete a booking
+    //Delete a booking
     public void deleteBooking(int id) {
         String sql = "DELETE FROM bookings WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
-    // ✅ Row Mapper for Booking object
+    //Row Mapper for Booking object
     private static class BookingRowMapper implements RowMapper<Booking> {
         @Override
         public Booking mapRow(ResultSet rs, int rowNum) throws SQLException {
