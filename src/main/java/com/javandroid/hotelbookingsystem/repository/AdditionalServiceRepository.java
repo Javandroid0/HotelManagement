@@ -1,8 +1,6 @@
 package com.javandroid.hotelbookingsystem.repository;
 
 import com.javandroid.hotelbookingsystem.model.AdditionalService;
-import com.javandroid.hotelbookingsystem.model.Booking;
-import com.javandroid.hotelbookingsystem.service.BookingService;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
